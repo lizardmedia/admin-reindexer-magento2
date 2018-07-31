@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Bartosz Kubicki <bartosz.kubicki@lizardmedia.pl>
+ * @author Paweł Papke <pawel.papke@lizardmedia.pl>
+ * @copyright Copyright (C) 2018 Lizard Media (http://lizardmedia.pl)
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="adminhtml.indexer.grid.grid.massaction">
+            <arguments>
+                <argument name="options" xsi:type="array">
+                    <item name="reindex" xsi:type="array">
+                        <item name="label" xsi:type="string" translate="true">Reindex data</item>
+                        <item name="url" xsi:type="string">indexer/indexer/massReindex</item>
+                    </item>
+                </argument>
+            </arguments>
+        </referenceBlock>
+    </body>
+</page>
