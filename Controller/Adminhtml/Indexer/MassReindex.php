@@ -66,7 +66,6 @@ class MassReindex extends Action
         $this->indexerProcessor = $indexerProcessor;
     }
 
-
     /**
      * @return Redirect
      */
@@ -90,7 +89,6 @@ class MassReindex extends Action
         return $this->getRedirect();
     }
 
-
     /**
      * @return bool
      */
@@ -98,7 +96,6 @@ class MassReindex extends Action
     {
         return $this->_authorization->isAllowed(self::ADMIN_RESOURCE);
     }
-
 
     /**
      * @return Redirect

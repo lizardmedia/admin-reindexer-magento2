@@ -11,10 +11,10 @@ declare(strict_types=1);
 
 namespace LizardMedia\AdminIndexer\Test\Integration;
 
-use \Magento\Framework\Component\ComponentRegistrar;
-use \Magento\Framework\Module\ModuleList;
-use \Magento\TestFramework\Helper\Bootstrap;
-use \PHPUnit\Framework\TestCase;
+use Magento\Framework\Component\ComponentRegistrar;
+use Magento\Framework\Module\ModuleList;
+use Magento\TestFramework\Helper\Bootstrap;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class ModuleConfigTest
@@ -27,7 +27,6 @@ class ModuleConfigTest extends TestCase
      */
     const MODULE_NAME = 'LizardMedia_AdminIndexer';
 
-
     /**
      * @test
      */
@@ -36,7 +35,6 @@ class ModuleConfigTest extends TestCase
         $registrar = new ComponentRegistrar();
         $this->assertArrayHasKey(self::MODULE_NAME, $registrar->getPaths(ComponentRegistrar::MODULE));
     }
-
 
     /**
      * @test

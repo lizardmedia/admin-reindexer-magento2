@@ -69,7 +69,6 @@ class AsyncReindexRunner implements AsyncReindexRunnerInterface
         $this->processFactory = $processFactory;
     }
 
-
     /**
      * {@inheritDoc}
      */
@@ -81,7 +80,6 @@ class AsyncReindexRunner implements AsyncReindexRunnerInterface
         $this->messageBag->addMessage(__('Indexing of indexer %1 has been executed', $indexerId)->render());
     }
 
-
     /**
      * @param string $indexerId
      * @return string
@@ -91,7 +89,6 @@ class AsyncReindexRunner implements AsyncReindexRunnerInterface
         return sprintf('php %s/%s %s', $this->getRootDir(), self::INDEXER_REINDEX_COMMAND, $indexerId);
     }
 
-
     /**
      * @return string
      */
@@ -99,7 +96,6 @@ class AsyncReindexRunner implements AsyncReindexRunnerInterface
     {
         return $this->directoryList->getRoot();
     }
-
 
     /**
      * @param string $command
