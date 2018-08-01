@@ -18,7 +18,8 @@
   ],
   "require": {
     "php": "^7.1.0",
-    "magento/module-indexer": "^100.2.3"
+    "magento/module-indexer": "^100.2.3",
+    "symfony/process": "^2.7 || ^3.0"
   },
   "require-dev": {
     "phpunit/phpunit": ">=7.0.0"

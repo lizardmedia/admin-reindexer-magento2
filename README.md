@@ -50,7 +50,6 @@ bin/magento setup:upgrade
 
 ## For developers
 
-Module uses `symfony/process` component used by composer, so it is not included as dependency in module's `composer.json`.
 Indexing is performed in background, each index in separate process.
 
 ## Contributing
