@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Bartosz Kubicki <bartosz.kubicki@lizardmedia.pl>
+ * @author Paweł Papke <pawel.papke@lizardmedia.pl>
+ * @copyright Copyright (C) 2018 Lizard Media (http://lizardmedia.pl)
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <!-- API section-->
+    <preference for="LizardMedia\AdminIndexer\Api\IndexerProcessorInterface"
+                type="LizardMedia\AdminIndexer\Model\IndexerProcessor" />
+    <preference for="LizardMedia\AdminIndexer\Api\ReindexRunner\SyncReindexRunnerInterface"
+                type="LizardMedia\AdminIndexer\Model\ReindexRunner\SyncReindexRunner" />
+    <preference for="LizardMedia\AdminIndexer\Api\ReindexRunner\AsyncReindexRunnerInterface"
+                type="LizardMedia\AdminIndexer\Model\ReindexRunner\AsyncReindexRunner" />
+    <preference for="LizardMedia\AdminIndexer\Api\ReindexRunner\MessageBagInterface"
+                type="LizardMedia\AdminIndexer\Model\ReindexRunner\MessageBag"/>
+    <!-- End of API section-->
+
+    <!-- Construct arguments replacements section -->
+    <type name="LizardMedia\AdminIndexer\Model\IndexerProcessor">
+        <arguments>
+            <argument name="reindexRunner" xsi:type="object">LizardMedia\AdminIndexer\Api\ReindexRunner\AsyncReindexRunnerInterface</argument>
+        </arguments>
+    </type>
+    <!-- End of construct arguments replacements section -->
+
+</config>

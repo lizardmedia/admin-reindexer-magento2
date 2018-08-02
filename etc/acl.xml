@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Bartosz Kubicki <bartosz.kubicki@lizardmedia.pl>
+ * @author Paweł Papke <pawel.papke@lizardmedia.pl>
+ * @copyright Copyright (C) 2018 Lizard Media (http://lizardmedia.pl)
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+    <acl>
+        <resources>
+            <resource id="Magento_Backend::admin">
+                <resource id="Magento_Backend::system">
+                    <resource id="Magento_Backend::tools">
+                        <resource id="LizardMedia_AdminIndexer::indexer" title="LizardMedia admin indexer" translate="title"
+                                  sortOrder="50"/>
+                    </resource>
+                </resource>
+            </resource>
+        </resources>
+    </acl>
+</config>
