@@ -15,8 +15,15 @@ namespace LizardMedia\AdminIndexer\Exception;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Phrase;
 
+/**
+ * Class ReindexFailureException
+ * @package LizardMedia\AdminIndexer\Exception
+ */
 class ReindexFailureException extends LocalizedException
 {
+    /**
+     * @var string
+     */
     private $indexerName;
 
     /**
@@ -29,7 +36,6 @@ class ReindexFailureException extends LocalizedException
     public function __construct(Phrase $phrase, string $indexerName, \Exception $cause = null, int $code = 0)
     {
         parent::__construct($phrase, $cause, $code);
-
         $this->indexerName = $indexerName;
     }
 
