@@ -21,7 +21,7 @@ use LizardMedia\AdminIndexer\Exception\ReindexFailureException;
 interface IndexerProcessorInterface
 {
     /**
-     * @param string ...$indexerIds
+     * @param string[] ...$indexerIds
      * @return void
      * @throws ReindexFailureException
      */

@@ -14,6 +14,10 @@ namespace LizardMedia\AdminIndexer\Test\Integration\Controller\Adminhtml\Indexer
 
 use Magento\TestFramework\TestCase\AbstractBackendController;
 
+/**
+ * Class MassReindexTest
+ * @package LizardMedia\AdminIndexer\Test\Integration\Controller\Adminhtml\Indexer
+ */
 class MassReindexTest extends AbstractBackendController
 {
     /**
