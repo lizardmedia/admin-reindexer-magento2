@@ -2,7 +2,7 @@
   "name": "lizardmedia/module-admin-reindexer",
   "description": "Magento2 module adding reindexation from the admin panel",
   "type": "magento2-module",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": [
     "MIT"
   ],
