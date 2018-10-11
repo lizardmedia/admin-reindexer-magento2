@@ -50,7 +50,7 @@ bin/magento setup:upgrade
 
 ## For developers
 
-Indexing is performed in background, each index in separate process.
+Indexing is performed in background, using reactPHP child process component
 
 ## Contributing
 
@@ -73,5 +73,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## To do
 
-* write unit test for module
 * add possibility to track indexing progress
+* add integration tests

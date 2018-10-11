@@ -14,7 +14,7 @@ namespace LizardMedia\AdminIndexer\Controller\Adminhtml\Indexer;
 
 use LizardMedia\AdminIndexer\Api\IndexerProcessorInterface;
 use LizardMedia\AdminIndexer\Api\ReindexRunner\MessageBagInterface;
-use LizardMedia\AdminIndexer\Exception\ReindexFailureException;
+use LizardMedia\AdminIndexer\Exception\ReindexFailureAggregateException;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\Controller\Result\Redirect;
@@ -60,7 +60,6 @@ class MassReindex extends Action
         IndexerProcessorInterface $indexerProcessor
     ) {
         parent::__construct($context);
-
         $this->messageBag = $messageBag;
         $this->redirectFactory = $redirectFactory;
         $this->indexerProcessor = $indexerProcessor;
@@ -69,7 +68,7 @@ class MassReindex extends Action
     /**
      * @return Redirect
      */
-    public function execute() : Redirect
+    public function execute(): Redirect
     {
         $indexerIds = $this->getRequest()->getParam('indexer_ids');
 
@@ -77,13 +76,14 @@ class MassReindex extends Action
             $this->messageManager->addErrorMessage(__('Please select at least one index.'));
             return $this->getRedirect();
         }
+
         $indexerIds = $this->castValuesToString($indexerIds);
 
         try {
             $this->indexerProcessor->process(...$indexerIds);
-            $this->displayMessages();
-        } catch (ReindexFailureException $exception) {
-            $this->messageManager->addErrorMessage(__('Reindex failed on indexer %1.', $exception->getIndexerName()));
+            $this->displayMessagesAboutRunningIndexers();
+        } catch (ReindexFailureAggregateException $exception) {
+            $this->displayErrors($exception);
         }
 
         return $this->getRedirect();
@@ -121,17 +121,31 @@ class MassReindex extends Action
     private function castValuesToString(array $indexerIds): array
     {
         return array_filter($indexerIds, function ($indexerId) {
-            return (string)$indexerId;
+            return (string) $indexerId;
         });
     }
 
     /**
      * @return void
      */
-    private function displayMessages(): void
+    private function displayMessagesAboutRunningIndexers(): void
     {
         foreach ($this->messageBag->getMessages() as $message) {
             $this->messageManager->addNoticeMessage($message);
+        }
+    }
+
+    /**
+     * @param ReindexFailureAggregateException $exception
+     * @return void
+     */
+    private function displayErrors(ReindexFailureAggregateException $exception): void
+    {
+        $this->messageManager->addErrorMessage($exception->getMessage());
+        $errors = $exception->getErrors();
+
+        foreach ($errors as $error) {
+            $this->messageManager->addErrorMessage($error->getMessage());
         }
     }
 }

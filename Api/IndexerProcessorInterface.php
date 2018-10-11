@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace LizardMedia\AdminIndexer\Api;
 
-use LizardMedia\AdminIndexer\Exception\ReindexFailureException;
+use LizardMedia\AdminIndexer\Exception\ReindexFailureAggregateException;
 
 /**
  * Interface IndexerProcessorInterface
@@ -23,7 +23,7 @@ interface IndexerProcessorInterface
     /**
      * @param string[] ...$indexerIds
      * @return void
-     * @throws ReindexFailureException
+     * @throws ReindexFailureAggregateException
      */
     public function process(string ...$indexerIds): void;
 }

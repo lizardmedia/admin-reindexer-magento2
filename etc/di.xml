@@ -10,12 +10,12 @@
         xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
 
     <!-- API section-->
+    <preference for="LizardMedia\AdminIndexer\Api\Adapter\ReactPHP\ChildProcess\ProcessFactoryInterface"
+                type="LizardMedia\AdminIndexer\Model\Adapter\ReactPHP\ChildProcess\ProcessFactory"/>
+    <preference for="LizardMedia\AdminIndexer\Api\Adapter\ReactPHP\EventLoop\LoopFactoryInterface"
+                type="LizardMedia\AdminIndexer\Model\Adapter\ReactPHP\EventLoop\LoopFactory"/>
     <preference for="LizardMedia\AdminIndexer\Api\IndexerProcessorInterface"
                 type="LizardMedia\AdminIndexer\Model\IndexerProcessor" />
-    <preference for="LizardMedia\AdminIndexer\Api\ReindexRunner\SyncReindexRunnerInterface"
-                type="LizardMedia\AdminIndexer\Model\ReindexRunner\SyncReindexRunner" />
-    <preference for="LizardMedia\AdminIndexer\Api\ReindexRunner\AsyncReindexRunnerInterface"
-                type="LizardMedia\AdminIndexer\Model\ReindexRunner\AsyncReindexRunner" />
     <preference for="LizardMedia\AdminIndexer\Api\ReindexRunner\MessageBagInterface"
                 type="LizardMedia\AdminIndexer\Model\ReindexRunner\MessageBag"/>
     <!-- End of API section-->
@@ -23,7 +23,7 @@
     <!-- Construct arguments replacements section -->
     <type name="LizardMedia\AdminIndexer\Model\IndexerProcessor">
         <arguments>
-            <argument name="reindexRunner" xsi:type="object">LizardMedia\AdminIndexer\Api\ReindexRunner\AsyncReindexRunnerInterface</argument>
+            <argument name="reindexRunner" xsi:type="object">LizardMedia\AdminIndexer\Model\ReindexRunner\AsyncReindexRunner</argument>
         </arguments>
     </type>
     <!-- End of construct arguments replacements section -->
