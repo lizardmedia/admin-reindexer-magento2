@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace LizardMedia\AdminIndexer\Api;
 
+use LizardMedia\AdminIndexer\Exception\ReindexFailureAggregateException;
+
 /**
  * Interface ReindexRunnerInterface
  * @package LizardMedia\AdminIndexer\Api
@@ -19,9 +21,9 @@ namespace LizardMedia\AdminIndexer\Api;
 interface ReindexRunnerInterface
 {
     /**
-     * @param string $indexerId
+     * @param string[] ...$indexerIds
      * @return void
-     * @throws \Exception
+     * @throws ReindexFailureAggregateException
      */
-    public function run(string $indexerId): void;
+    public function run(string ...$indexerIds): void;
 }

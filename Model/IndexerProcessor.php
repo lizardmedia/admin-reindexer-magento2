@@ -14,7 +14,7 @@ namespace LizardMedia\AdminIndexer\Model;
 
 use LizardMedia\AdminIndexer\Api\IndexerProcessorInterface;
 use LizardMedia\AdminIndexer\Api\ReindexRunnerInterface;
-use LizardMedia\AdminIndexer\Exception\ReindexFailureException;
+use LizardMedia\AdminIndexer\Exception\ReindexFailureAggregateException;
 
 /**
  * Class IndexerProcessor
@@ -42,17 +42,6 @@ class IndexerProcessor implements IndexerProcessorInterface
      */
     public function process(string ...$indexerIds): void
     {
-        foreach ($indexerIds as $indexerId) {
-            try {
-                $this->reindexRunner->run($indexerId);
-            } catch (\Exception $exception) {
-                throw new ReindexFailureException(
-                    __($exception->getMessage()),
-                    $indexerId,
-                    $exception,
-                    $exception->getCode()
-                );
-            }
-        }
+        $this->reindexRunner->run(...$indexerIds);
     }
 }

@@ -12,23 +12,36 @@ declare(strict_types=1);
 
 namespace LizardMedia\AdminIndexer\Model\ReindexRunner;
 
-use LizardMedia\AdminIndexer\Api\ReindexRunner\AsyncReindexRunnerInterface;
+use LizardMedia\AdminIndexer\Api\Adapter\ReactPHP\ChildProcess\ProcessFactoryInterface;
+use LizardMedia\AdminIndexer\Api\Adapter\ReactPHP\EventLoop\LoopFactoryInterface;
+use LizardMedia\AdminIndexer\Api\ReindexRunnerInterface;
 use LizardMedia\AdminIndexer\Api\ReindexRunner\MessageBagInterface;
+use LizardMedia\AdminIndexer\Exception\ReindexFailureAggregateException;
 use Magento\Framework\Filesystem\DirectoryList;
 use Magento\Framework\Indexer\IndexerRegistry;
-use Symfony\Component\Process\Process;
-use Symfony\Component\Process\ProcessFactory;
+use React\EventLoop\LoopInterface;
+use React\ChildProcess\Process;
 
 /**
  * Class AsyncReindexRunner
  * @package LizardMedia\AdminIndexer\Model\ReindexRunner
  */
-class AsyncReindexRunner implements AsyncReindexRunnerInterface
+class AsyncReindexRunner implements ReindexRunnerInterface
 {
     /**
-     * @const string
+     * @var string
      */
-    const INDEXER_REINDEX_COMMAND = 'bin/magento indexer:reindex';
+    private const INDEXER_REINDEX_COMMAND = 'bin/magento indexer:reindex';
+
+    /**
+     * @var ProcessFactoryInterface
+     */
+    private $childProcessFactory;
+
+    /**
+     * @var LoopFactoryInterface
+     */
+    private $loopFactory;
 
     /**
      * @var MessageBagInterface
@@ -46,47 +59,86 @@ class AsyncReindexRunner implements AsyncReindexRunnerInterface
     private $indexerRegistry;
 
     /**
-     * @var ProcessFactory
-     */
-    private $processFactory;
-
-    /**
-     * ReindexRunner constructor.
+     * AsyncReindexRunner constructor.
+     * @param ProcessFactoryInterface $childProcessFactory
+     * @param LoopFactoryInterface $loopFactory
      * @param MessageBagInterface $messageBag
      * @param DirectoryList $directoryList
      * @param IndexerRegistry $indexerRegistry
-     * @param ProcessFactory $processFactory
      */
     public function __construct(
+        ProcessFactoryInterface $childProcessFactory,
+        LoopFactoryInterface $loopFactory,
         MessageBagInterface $messageBag,
         DirectoryList $directoryList,
-        IndexerRegistry $indexerRegistry,
-        ProcessFactory $processFactory
+        IndexerRegistry $indexerRegistry
     ) {
+        $this->childProcessFactory = $childProcessFactory;
+        $this->loopFactory = $loopFactory;
         $this->messageBag = $messageBag;
         $this->directoryList = $directoryList;
         $this->indexerRegistry = $indexerRegistry;
-        $this->processFactory = $processFactory;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function run(string $indexerId): void
+    public function run(string ...$indexerIds): void
     {
-        $command = $this->buildCommand($indexerId);
-        $process = $this->instantiateNewProcess($command);
-        $process->start();
-        $this->messageBag->addMessage(__('Indexing of indexer %1 has been executed', $indexerId)->render());
+        $this->informAboutIndexing($indexerIds);
+        $indexerIds = $this->formatIndexersToBeReindex(...$indexerIds);
+        $loop = $this->instantiateLoop();
+
+        try {
+            $command = $this->buildCommand($indexerIds);
+            $process = $this->instantiateNewProcess($command);
+            $process->start($loop);
+            $loop->run();
+        } catch (\Exception $exception) {
+            $this->handleException($exception);
+        }
     }
 
     /**
-     * @param string $indexerId
+     * @param string[] ...$indexerIds
      * @return string
      */
-    private function buildCommand(string $indexerId): string
+    private function formatIndexersToBeReindex(string ...$indexerIds): string
     {
-        return sprintf('php %s/%s %s', $this->getRootDir(), self::INDEXER_REINDEX_COMMAND, $indexerId);
+        return implode(' ', $indexerIds);
+    }
+
+    /**
+     * @param array $indexerIds
+     * @return void
+     */
+    private function informAboutIndexing(array $indexerIds): void
+    {
+        foreach ($indexerIds as $indexerId) {
+            $this->messageBag->addMessage(__('Indexing of indexer %1 has been executed', $indexerId)->render());
+        }
+    }
+
+    /**
+     * @return LoopInterface
+     */
+    private function instantiateLoop(): LoopInterface
+    {
+        return $this->loopFactory->create();
+    }
+
+    /**
+     * @param string $indexerIds
+     * @return string
+     */
+    private function buildCommand(string $indexerIds): string
+    {
+        return sprintf(
+            'php %s/%s %s > /dev/null 2>&1 &',
+            $this->getRootDir(),
+            self::INDEXER_REINDEX_COMMAND,
+            $indexerIds
+        );
     }
 
     /**
@@ -103,6 +155,21 @@ class AsyncReindexRunner implements AsyncReindexRunnerInterface
      */
     private function instantiateNewProcess(string $command): Process
     {
-        return $this->processFactory->create(['commandline' => $command]);
+        return $this->childProcessFactory->create($command);
+    }
+
+
+    /**
+     * @param \Exception $exception
+     * @return void
+     * @throws ReindexFailureAggregateException
+     */
+    private function handleException(\Exception $exception): void
+    {
+        throw new ReindexFailureAggregateException(
+            __($exception->getMessage()),
+            $exception,
+            $exception->getCode()
+        );
     }
 }

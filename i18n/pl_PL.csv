@@ -3,3 +3,5 @@
 "LizardMedia admin indexer","LizardMedia admin indexer"
 "Reindex failed on indexer %1","Błąd indeksowania na indeksie %1"
 "Indexing of indexer %1 has been executed","Rozpoczęto indeksowanie indeksu %1"
+"Following indexing errors has occured: ","Następujące błędy indeksowanie miały miejsce: "
+"Indexing of %1 has failed: %2","Indeksowanie %1 nie udało się: %2"
